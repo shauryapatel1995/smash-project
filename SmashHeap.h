@@ -66,14 +66,20 @@ class SmashHeap {
   public:
     SmashHeap () {
       //Implement
+      
     }
 
     void* malloc (size_t size) {
 		//Implement malloc here
+		//Vinita
+		//We need to create a data structure for class sizes here 
+		//Allocate that with Heap Layers
+		//Create our own implementation of memory for the class sizes using mmap 
 		return nullptr;
     }
 
     void free (void* ptr) {
 		//Implement free
+		//Free should be the opposite of malloc for us?
     }
 };

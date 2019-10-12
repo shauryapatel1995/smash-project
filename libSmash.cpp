@@ -15,6 +15,9 @@ typedef void (*SignalHandlerType) (int signum, siginfo_t* info, void* arg);
 
 void segv_handler (int signum, siginfo_t* info, void* arg) {
 	//Implement the signal handler
+	//For cold sets and the right process this should bring the cold set back to the hot queue
+	//For compressed set I am not sure if a sig will be found but that page needs to be brought back to the hot queue
+	//Return a bad code in case of a bad memory call
 }
 
 struct sigaction setSignalHandler (int _sig, SignalHandlerType _sig_handler) {
@@ -63,6 +66,7 @@ void *malloc(size_t size) {
     if (smashHeap == nullptr && initializing_heap == true) {
 		//When heap is not initialized and it is getting initialized use
 		//mmap instead of malloc to avoid recursion
+		//We have to use mmap to avoid recursion
         return mmap (0, size, PROT_READ|PROT_WRITE, 
 					 MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
     }
@@ -92,4 +96,23 @@ void* calloc (size_t nmemb, size_t size) {
 	//Implement calloc
 	return nullptr;
 }
+
+
+void* original_page (void* compressed_addr) {
+	// Implement this to get the original page back from the compressed address memory
+	// We will need to maintain something like a hash table mapping for this
+}
+
+bool decompress(void* compressed_addr, void* original_addr) {
+	//Bring the page back to original address from the compressed address
+	//Return false if the operation failed
+}
+
+bool is_in_compressed_page(void* addr) {
+	//Lookup our mapping to check if this page is in compressed memory
+}
+
+void statistics(char* string){
+	//Statistics for "each" size class 
+	//It includes the number of hot, cold and compressed pages and the number of allocated objects
 }
